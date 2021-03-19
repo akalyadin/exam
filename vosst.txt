@@ -1,0 +1,1 @@
+sudo scp Desktop/start.zip a@192.168.122.206:/home/a/Desktop
