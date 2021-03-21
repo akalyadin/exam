@@ -1,7 +1,16 @@
 #!/bin/bash
+echo "Перед выполнением скрипта:
+1. Войди от имени суперпользователя
+2. Заиди на хост slave по SSH
+Продолжить выполнение? y/n"
+read keyb
+if [ $keyb != 'y' ]
+    then
+        exit 0
+fi
 if [ `whoami` != root ]
     then
-        echo "Вы не являетесь привелигированным пользователем,выполните  sudo -i"
+        echo "Вы не являетесь привелигированным пользователем,выполните  sudo -i, после чего запусти start.sh"
         exit 0
 fi
 echo "Введите IP адрес MASTER"
@@ -24,11 +33,13 @@ i=0
 while [ $i -eq 0 ]
 do
     status=`sshpass -f 1pass.txt ssh a@192.168.122.7 'systemctl status mysql.service' | grep "active (running)" | wc -l`
-    if [ $status -ne 1]
+    if [ $status -eq 0 ]
         then
             sleep 2
+            echo -n .
         else
             i=1
+            echo poweron
     fi
 done
 
