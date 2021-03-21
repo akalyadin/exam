@@ -1,5 +1,6 @@
 #!/bin/bash
-echo "Перед выполнением скрипта:
+echo "-----------------------------
+ Перед выполнением скрипта:
 1. Войди от имени суперпользователя
 2. Заиди на хост slave по SSH
 Продолжить выполнение? y/n"
@@ -32,7 +33,7 @@ i=0
     #цикл создан для проверки корректности ввода с клавиатуры
 while [ $i -eq 0 ]
 do
-    status=`sshpass -f 1pass.txt ssh a@192.168.122.7 'systemctl status mysql.service' | grep "active (running)" | wc -l`
+    status=`sshpass -f 1pass.txt ssh a@192.168.122.7 'systemctl status mysql.service' 2>/dev/null | grep "active (running)" | wc -l 2>/dev/null`
     if [ $status -eq 0 ]
         then
             sleep 2
