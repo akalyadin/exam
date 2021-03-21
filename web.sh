@@ -16,37 +16,38 @@ if [ `whoami` != root ]
 fi
 echo "Введите IP адрес MASTER"
 read master
-echo "Введите IP адрес SLAVE"
-read slave
-apt install -y sshpass
-slave_ping=`ping -c 3 $slave | grep ttl | wc -l`
-if [ $slave_ping -ne 3 ]
-    then
-        echo "Отсутствует пинг до хоста slave"
-        exit 0
-fi
-sshpass -f 1pass.txt ssh a@192.168.122.7 'mkdir /home/a/Desktop/start'
-sshpass -f 1pass.txt scp start.sh a@192.168.122.7:/home/a/Desktop/start
-echo "Запусти скрипт start.sh на хосте slave (Desktop/start/), после окончания установки скрипт продолжит свое выполнение"
-
-i=0    
-    #цикл создан для проверки корректности ввода с клавиатуры
-while [ $i -eq 0 ]
-do
-    status=`sshpass -f 1pass.txt ssh a@192.168.122.7 'systemctl status mysql.service' 2>/dev/null | grep "active (running)" | wc -l 2>/dev/null`
-    if [ $status -eq 0 ]
-        then
-            sleep 2
-            echo -n .
-        else
-            i=1
-            echo poweron
-    fi
-done
-
 #Проверка необходимого хоста (на слейв апач и нджинкс не ставим)
 if [ `hostname` != 'slave' ]
     then
+        echo "Введите IP адрес SLAVE"
+        read slave
+        apt install -y sshpass
+        slave_ping=`ping -c 3 $slave | grep ttl | wc -l`
+        if [ $slave_ping -ne 3 ]
+            then
+                echo "Отсутствует пинг до хоста slave"
+                exit 0
+        fi
+        sshpass -f 1pass.txt ssh a@192.168.122.7 'mkdir /home/a/Desktop/start'
+        sshpass -f 1pass.txt scp start.sh a@192.168.122.7:/home/a/Desktop/start
+        echo "Запусти скрипт start.sh на хосте slave (Desktop/start/), после окончания установки скрипт продолжит свое выполнение"
+
+        i=0    
+        #цикл для проверки что служба поднялась
+        while [ $i -eq 0 ]
+        do
+            status=`sshpass -f 1pass.txt ssh a@192.168.122.7 'systemctl status mysql.service' 2>/dev/null | grep "active (running)" | wc -l 2>/dev/null`
+            if [ $status -eq 0 ]
+                then
+                    sleep 2
+                    echo -n .
+                else
+                    i=1
+                    echo poweron
+            fi
+        done
+        
+        #Установка апача и нджинкса
         apt install -y git apache2
         systemctl stop apache2
         apt install -y nginx
