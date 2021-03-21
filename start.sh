@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apt install -y git
 git init
 git config --global user.email "akalyadin@astralinux.ru"
 git config --global user.name "AlexeyKalyadin"
