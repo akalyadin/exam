@@ -88,7 +88,7 @@ count_str=`wc -l /etc/apt/sources.list | cut -c '1-2'`
             sed -i $j /etc/apt/sources.list
         done
 dpkg -i mysql-apt-config_0.8.15-1_all.deb
-echo "deb http://repo.mysql.com/apt/debian stretch InRelease" | tee /etc/apt/sources.list
+echo "deb http://repo.mysql.com/apt/debian stretch InRelease" | tee -a /etc/apt/sources.list
 echo "deb http://deb.debian.org/debian/ stretch main contrib non-free" | tee -a /etc/apt/sources.list
 cd /tmp
 wget https://dl.astralinux.ru/astra/testing/orel/repository/pool/main/d/debian-archive-keyring/debian-archive-keyring_2017.5_all.deb
