@@ -1,38 +1,23 @@
 #!/bin/bash
-echo "-----------------------------
- Перед выполнением скрипта:
-1. Войди от имени суперпользователя
-2. Заиди на хост slave по SSH
-Продолжить выполнение? y/n
------------------------------------"
-read keyb
-if [ $keyb != 'y' ]
-    then
-        exit 0
-fi
-if [ `whoami` != root ]
-    then
-        echo "-----------------------
-        Вы не являетесь привелигированным пользователем,выполните  sudo -i, после чего запусти start.sh
-        ---------------------------"
-        exit 0
-fi
-echo "Введите IP адрес MASTER"
-read master
+#echo "-----------------------------
+# Перед выполнением скрипта:
+#1. Установится 
+#2. Заиди на хост slave по SSH
+#Продолжить выполнение? y/n
+#-----------------------------------"
+#read keyb
+#if [ $keyb != 'y' ]
+#    then
+#        exit 0
+#fi
+#echo "Введите IP адрес MASTER"
+#read master
 #Проверка необходимого хоста (на слейв апач и нджинкс не ставим)
 if [ `hostname` != 'slave' ]
     then
-        echo "Введите IP адрес SLAVE"
-        read slave
-        apt install -y sshpass
-        slave_ping=`ping -c 3 $slave | grep ttl | wc -l`
-        if [ $slave_ping -ne 3 ]
-            then
-                echo "----------------------------
-                Отсутствует пинг до хоста slave
-                -------------------------------"
-                exit 0
-        fi
+#        echo "Введите IP адрес SLAVE"
+#        read slave
+
         sshpass -f 1pass.txt ssh a@192.168.122.7 'mkdir /home/a/Desktop/start'
         sshpass -f 1pass.txt scp start.sh a@192.168.122.7:/home/a/Desktop/start/run.sh
         echo "----------------------------
