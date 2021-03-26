@@ -1,17 +1,4 @@
 #!/bin/bash
-#echo "-----------------------------
-# Перед выполнением скрипта:
-#1. Установится 
-#2. Заиди на хост slave по SSH
-#Продолжить выполнение? y/n
-#-----------------------------------"
-#read keyb
-#if [ $keyb != 'y' ]
-#    then
-#        exit 0
-#fi
-#echo "Введите IP адрес MASTER"
-#read master
 #Проверка необходимого хоста (на слейв апач и нджинкс не ставим)
 if [ `hostname` != 'slave' ]
     then
@@ -99,3 +86,31 @@ rm ./temp.sources.list
 #rootssh=`sshpass -f 1pass.txt ssh root@192.168.122.7 'cat /etc/ssh/sshd_config | grep PermitRootLogin | grep yes' | wc -l`
 #if [ $rootssh
 
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-7.x.list
+apt update && apt install elasticsearch
+systemctl daemon-reload
+systemctl enable elasticsearch.service
+apt install curl
+cp elasticsearch.yml /etc/elasticsearch/
+wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -
+echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | tee -a /etc/apt/sources.list.d/elastic-7.x.list
+apt update && apt install kibana
+systemctl daemon-reload
+systemctl enable kibana.service
+systemctl start kibana.service
+cp kibana.yml /etc/kibana/
+apt install logstash
+systemctl enable logstash.service
+cp input.conf /etc/logstash/conf.d
+cp output.conf /etc/logstash/conf.d
+cp filter.conf /etc/logstash/conf.d
+systemctl start logstash.service
+curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.11.0-amd64.deb
+dpkg -i filebeat-7.11.0-amd64.deb
+cp filebeat.yml /etc/filebeat/
+systemctl start filebeat
+systemctl enable filebeat
+apt install xdg-utils
+xdg-open http://127.0.0.1:80
+xdg-open http://127.0.0.1:5601
