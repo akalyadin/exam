@@ -43,7 +43,6 @@ if [ `hostname` != 'slave' ]
 fi
 
 #Ставим мускул
-cd /tmp
 wget https://dev.mysql.com/get/mysql-apt-config_0.8.15-1_all.deb
 #надо закоментить sources list
 cat /etc/apt/sources.list > ./temp.sources.list
@@ -103,21 +102,17 @@ if [ `hostname` != 'slave' ]
         systemctl daemon-reload
         systemctl enable kibana.service
         systemctl start kibana.service
-	rm /etc/kibana/kibana.yml
-	mv ./kibana.yml /etc/kibana/
+	cp kibana.yml /etc/kibana/
         systemctl restart kibana.service
         apt install logstash
         systemctl enable logstash.service
-	pwd
-	ls -alh
-	cp -r /input.conf /etc/logstash/conf.d/
-        cp -r ./output.conf /etc/logstash/conf.d/
-        mv ./filter.conf /etc/logstash/conf.d/
+	cp input.conf /etc/logstash/conf.d/
+        cp output.conf /etc/logstash/conf.d/
+        cp filter.conf /etc/logstash/conf.d/
         systemctl start logstash.service
         curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.11.0-amd64.deb
         dpkg -i filebeat-7.11.0-amd64.deb
-        rm /etc/filebeat/filebeat.yml
-	mv ./filebeat.yml /etc/filebeat/
+	cp filebeat.yml /etc/filebeat/
         systemctl start filebeat
         systemctl enable filebeat
         apt install xdg-utils
