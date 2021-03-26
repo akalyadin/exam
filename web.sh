@@ -108,8 +108,10 @@ if [ `hostname` != 'slave' ]
         systemctl restart kibana.service
         apt install logstash
         systemctl enable logstash.service
-	mv ./input.conf /etc/logstash/conf.d/
-        mv ./output.conf /etc/logstash/conf.d/
+	pwd
+	ls -alh
+	cp -r /input.conf /etc/logstash/conf.d/
+        cp -r ./output.conf /etc/logstash/conf.d/
         mv ./filter.conf /etc/logstash/conf.d/
         systemctl start logstash.service
         curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.11.0-amd64.deb
