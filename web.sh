@@ -114,7 +114,4 @@ if [ `hostname` != 'slave' ]
 	cp filebeat.yml /etc/filebeat/
         systemctl start filebeat
         systemctl enable filebeat
-        apt install xdg-utils
-        xdg-open http://127.0.0.1:80
-        xdg-open http://127.0.0.1:5601
 fi
