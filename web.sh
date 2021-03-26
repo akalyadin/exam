@@ -103,17 +103,17 @@ if [ `hostname` != 'slave' ]
         systemctl daemon-reload
         systemctl enable kibana.service
         systemctl start kibana.service
-        cp kibana.yml /etc/kibana/
+        cp ./kibana.yml /etc/kibana/
         systemctl restart kibana.service
         apt install logstash
         systemctl enable logstash.service
-        cp input.conf /etc/logstash/conf.d
-        cp output.conf /etc/logstash/conf.d
-        cp filter.conf /etc/logstash/conf.d
+        cp ./input.conf /etc/logstash/conf.d
+        cp ./output.conf /etc/logstash/conf.d
+        cp ./filter.conf /etc/logstash/conf.d
         systemctl start logstash.service
         curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.11.0-amd64.deb
         dpkg -i filebeat-7.11.0-amd64.deb
-        cp filebeat.yml /etc/filebeat/
+        cp ./filebeat.yml /etc/filebeat/
         systemctl start filebeat
         systemctl enable filebeat
         apt install xdg-utils
